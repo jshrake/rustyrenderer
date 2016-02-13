@@ -1,0 +1,6 @@
+[package]
+name = "rustyrenderer"
+version = "0.1.0"
+authors = ["jshrake <justinshrake@gmail.com>"]
+
+[dependencies]
