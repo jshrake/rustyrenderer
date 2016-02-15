@@ -4,6 +4,8 @@ use std::io::Write;
 use image::format::Format;
 use image::tga;
 
+use renderer::color::Color;
+
 /// A rendering destination
 pub struct Framebuffer {
     width: usize,
@@ -22,13 +24,31 @@ impl Framebuffer {
         }
     }
 
-    /// Set the `[x, y]` pixel of the color buffer to `[r, g, b, a]`
-    pub fn set_pixel(&mut self, x: usize, y: usize, r: u8, g: u8, b: u8, a: u8) {
+    pub fn width(&self) -> usize {
+        self.width
+    }
+
+    pub fn height(&self) -> usize {
+        self.height
+    }
+
+    /// Set the `[x, y]` pixel of the color buffer to `Color`
+    pub fn set_pixel(&mut self, x: usize, y: usize, color: Color) {
         let start = 4 * (y * self.width + x);
+        let (r, g, b, a) = color.rgba();
         self.color_buffer[start] = b;
         self.color_buffer[start + 1] = g;
         self.color_buffer[start + 2] = r;
         self.color_buffer[start + 3] = a;
+    }
+
+    /// Get the `Color` of the `[x, y]` pixel
+    pub fn get_pixel(&self, x: usize, y: usize) -> Color {
+        let start = 4 * (y * self.width + x);
+        Color::from_rgba(self.color_buffer[start + 2],
+                         self.color_buffer[start + 1],
+                         self.color_buffer[start],
+                         self.color_buffer[start + 3])
     }
 
     /// Serialize the `Framebuffer` according to the specified `format`

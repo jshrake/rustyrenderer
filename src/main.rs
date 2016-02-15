@@ -1,35 +1,23 @@
 #![feature(plugin)]
 #![plugin(clippy)]
+#![allow(dead_code)]
+#![feature(test)]
 
 extern crate byteorder;
 
 mod image;
-mod framebuffer;
+mod renderer;
 
 use std::fs::File;
 use std::path::Path;
-
-fn line(buffer: &mut framebuffer::Framebuffer,
-        x0: usize,
-        y0: usize,
-        x1: usize,
-        y1: usize,
-        r: u8,
-        g: u8,
-        b: u8,
-        a: u8) {
-    let step_count = 1000;
-    for step in 0..step_count {
-        let t = step as f32 / step_count as f32;
-        let x = (x0 as f32 * (1.0 - t) + t * x1 as f32) as usize;
-        let y = (y0 as f32 * (1.0 - t) + t * y1 as f32) as usize;
-        buffer.set_pixel(x, y, r, g, b, a);
-    }
-}
+use renderer::framebuffer::Framebuffer;
+use renderer::Color;
 
 fn main() {
-    let mut fb = framebuffer::Framebuffer::new(100, 100);
-    line(&mut fb, 0, 0, 100, 100, 255, 0, 0, 255);
+    let (w, h) = (100, 100);
+    let mut fb = Framebuffer::new(w, h);
+    let color = Color::red();
+    renderer::line(&mut fb, w - 1, 0, 0, h - 1, color);
     let mut fout = File::create(&Path::new("image.tga")).unwrap();
     fb.save(&mut fout, image::format::Format::Tga).unwrap();
 }
