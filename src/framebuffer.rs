@@ -18,7 +18,7 @@ impl Framebuffer {
         Framebuffer {
             width: width,
             height: height,
-            color_buffer: vec![0; width*height*4],
+            color_buffer: vec![255; width*height*4],
         }
     }
 
