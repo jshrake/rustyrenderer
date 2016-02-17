@@ -2,7 +2,6 @@ extern crate std;
 use renderer::framebuffer::Framebuffer;
 use renderer::Color;
 
-// Performance: ~1100 ns/call
 pub fn line(buffer: &mut Framebuffer,
             mut x0: usize,
             mut y0: usize,
@@ -23,13 +22,26 @@ pub fn line(buffer: &mut Framebuffer,
     }
     x1 = std::cmp::min(x1, buffer.width());
     y1 = std::cmp::min(y1, buffer.height());
+    let dx = x1 as i32 - x0 as i32;
+    let dy = y1 as i32 - y0 as i32;
+    let derror = dy.abs() * 2;
+    let mut error = 0;
+    let mut y = y0 as i32;
+    let inc = if y1 > y0 {
+        1i32
+    } else {
+        -1i32
+    };
     for x in x0..x1 + 1 {
-        let t = (x - x0) as f32 / (x1 - x0) as f32;
-        let y = (y0 as f32 * (1.0 - t) + y1 as f32 * t).round() as usize;
         if transposed {
-            buffer.set_pixel(y, x, color);
+            buffer.set_pixel(y as usize, x, color);
         } else {
-            buffer.set_pixel(x, y, color);
+            buffer.set_pixel(x, y as usize, color);
+        }
+        error += derror;
+        if error > dx {
+            y += inc;
+            error -= dx * 2;
         }
     }
 }
