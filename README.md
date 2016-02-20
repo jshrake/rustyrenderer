@@ -5,7 +5,6 @@ A software renderer written in [rust](https://www.rust-lang.org/)
 Based on [tinyrenderer](https://github.com/ssloy/tinyrenderer)
 
 ## Results
----
 
 ### Lesson 1
 
