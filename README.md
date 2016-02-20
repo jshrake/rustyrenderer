@@ -9,4 +9,4 @@ Based on [tinyrenderer](https://github.com/ssloy/tinyrenderer)
 
 ### Lesson 1
 
-![african-head-obj](images/african_head.tga)
+![](http://i.imgur.com/e604bR7.png)
