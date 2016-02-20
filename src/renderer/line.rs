@@ -20,8 +20,8 @@ pub fn line(buffer: &mut Framebuffer,
         std::mem::swap(&mut x0, &mut x1);
         std::mem::swap(&mut y0, &mut y1);
     }
-    x1 = std::cmp::min(x1, buffer.width());
-    y1 = std::cmp::min(y1, buffer.height());
+    let w = buffer.width() - 1;
+    let h = buffer.height() - 1;
     let dx = x1 as i32 - x0 as i32;
     let dy = y1 as i32 - y0 as i32;
     let derror = dy.abs() * 2;
@@ -34,9 +34,9 @@ pub fn line(buffer: &mut Framebuffer,
     };
     for x in x0..x1 + 1 {
         if transposed {
-            buffer.set_pixel(y as usize, x, color);
+            buffer.set_pixel(std::cmp::min(w, y as usize), std::cmp::min(h, x), color);
         } else {
-            buffer.set_pixel(x, y as usize, color);
+            buffer.set_pixel(std::cmp::min(w, x), std::cmp::min(h, y as usize), color);
         }
         error += derror;
         if error > dx {
